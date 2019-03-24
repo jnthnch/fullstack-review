@@ -7,9 +7,10 @@ db.once('open', function() {
   console.log('we are connected to Mongooooooose!!!!')
 });
 
+// schema is document design
 let repoSchema = mongoose.Schema({
-  repo_id: {type: Number, 
-    unique: true}, //repo's ID
+  repo_id: {type: Number, unique: true}, //repo's ID
+  name: String,
   html_url: String, //repo's URL
   forks_count: Number 
 });
@@ -22,6 +23,7 @@ let save = (data) => {
   // TODO: Your code here
   // This function should save a repo or repos to
   // the MongoDB
+  //oneRepo is a document here
   var oneRepo = new Repo(data);
   oneRepo.save(function(err) {
     if (err) {
@@ -30,11 +32,5 @@ let save = (data) => {
   })
 }
 
-let saverr = (data) => {
-  console.log(data)
-
-}
-
-module.exports.saverr = saverr;
 module.exports.save = save;
 module.exports.Repo = Repo;

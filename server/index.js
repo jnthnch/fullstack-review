@@ -9,10 +9,14 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
 app.post('/repos', function (req, res) {
+
+
+
+
   console.log('req body is:', req.body)
   var githubUsername = req.body.username;
 
-    // let repoSchema = mongoose.Schema({
+  // let repoSchema = mongoose.Schema({
   //   owner: {
   //     login: String, //username
   //     id: Number, //user's ID
@@ -24,12 +28,13 @@ app.post('/repos', function (req, res) {
   // });
 
   var putDataIntoSchemaFormat = (repo) => {
-    var abc = {
+    var obj = {
       repo_id: repo.id,
+      name: repo.name,
       html_url: repo.html_url,
       forks_count: repo.forks_count
     };
-    return abc;
+    return obj;
   }
 
   // TODO - your code here!
@@ -48,13 +53,25 @@ app.post('/repos', function (req, res) {
         };
       }
   })
-
 });
 
 
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
+
+  mongooseDb.Repo
+  .find({}, function(err, docs) { 
+    if (err) {
+      console.log(err)
+    } else {
+      res.send(docs);
+    }
+  })
+  .limit(50)
+  .sort({ forks_count: -1})
+  .exec()
+
 });
 
 let port = 1128;
@@ -62,10 +79,3 @@ let port = 1128;
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
-
-// console.log('dataSchema:', dataInSchemaFormat)
-// mongooseDb.Repo.find(dataInSchemaFormat, function(err, data) {
-//   if (err) {
-//     console.log(err);
-//   } else if (data.length === 0){
-//     console.log('this ID doesnt exist! .... index', i)
